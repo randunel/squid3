@@ -2251,6 +2251,8 @@ parse_peer(CachePeer ** head)
 
 #if USE_OPENSSL
 
+        } else if (strcmp(token, "alwaysconnect") == 0) {
+            p->alwaysconnect = 1;
         } else if (strcmp(token, "ssl") == 0) {
             p->use_ssl = 1;
         } else if (strncmp(token, "sslcert=", 8) == 0) {

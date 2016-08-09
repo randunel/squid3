@@ -178,6 +178,7 @@ public:
     char *domain;       /* Forced domain */
 #if USE_OPENSSL
 
+    int alwaysconnect;
     int use_ssl;
     char *sslcert;
     char *sslkey;

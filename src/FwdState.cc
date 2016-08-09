@@ -807,6 +807,16 @@ FwdState::connectStart()
 
     request->hier.startPeerClock();
 
+    // Do not fowrward bumped connections to parent proxy unless it is an
+    // origin server
+    if (serverDestinations[0]->getPeer() && !serverDestinations[0]->getPeer()->options.originserver && request->flags.sslBumped) {
+        debugs(50, 4, "fwdConnectStart: Ssl bumped connections through parent proxy are not allowed");
+        ErrorState *anErr = new ErrorState(ERR_CANNOT_FORWARD, Http::scServiceUnavailable, request);
+        fail(anErr);
+        self = NULL; // refcounted
+        return;
+    }
+
     request->flags.pinned = false; // XXX: what if the ConnStateData set this to flag existing credentials?
     // XXX: answer: the peer selection *should* catch it and give us only the pinned peer. so we reverse the =0 step below.
     // XXX: also, logs will now lie if pinning is broken and leads to an error message.
